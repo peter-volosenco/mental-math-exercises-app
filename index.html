@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Speech Synthesis</title>
+    <link
+      href="https://fonts.googleapis.com/css?family=Pacifico"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" href="https://fav.farm/✅" />
+  </head>
+  <body>
+    <div class="voiceinator">
+      <h1>Mental Math</h1>
+
+      <div style="display: none">
+        <select name="voice" id="voices">
+          <option value="">Select A Voice</option>
+        </select>
+        <div>
+          <label for="rate">Rate:</label>
+          <input
+            name="rate"
+            type="range"
+            min="0"
+            max="3"
+            value="1"
+            step="0.1"
+          />
+        </div>
+        <div>
+          <label for="pitch">Pitch:</label>
+          <input name="pitch" type="range" min="0" max="2" step="0.1" />
+        </div>
+      </div>
+
+      <textarea name="text"></textarea>
+
+      <div id="countdown"></div>
+
+      <div style="text-align: center">
+        <div id="stop">||</div>
+        <div id="speak">></div>
+      </div>
+    </div>
+  </body>
+</html>
