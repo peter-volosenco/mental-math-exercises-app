@@ -9,7 +9,7 @@
       type="text/css"
     />
     <link rel="stylesheet" href="style.css" />
-    <link rel="icon" href="https://fav.farm/✅" />
+    <link rel="icon" href="https://fav.farm/👓" />
   </head>
   <body>
     <div class="voiceinator">
@@ -58,7 +58,7 @@
       const textArea = document.querySelector('[name="text"]');
       msg.text = textArea.value;
 
-      let isPaused = false;
+      let isPaused = true;
 
       function populateVoices() {
         voices = this.getVoices();
@@ -118,7 +118,7 @@
       voicesDropdown.addEventListener('change', setVoice);
       options.forEach((option) => option.addEventListener('change', setOption));
 
-      toggleVisibility(speakButton);
+      toggleVisibility(stopButton);
 
       speakButton.addEventListener('click', () => {
         isPaused = false;
