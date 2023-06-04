@@ -1,38 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Speech Synthesis</title>
-    <link
-      href="https://fonts.googleapis.com/css?family=Pacifico"
-      rel="stylesheet"
-      type="text/css"
-    />
-    <link rel="stylesheet" href="style.css" />
-    <link rel="icon" href="https://fav.farm/👓" />
-  </head>
-  <body>
+<head>
+  <meta charset="UTF-8">
+  <title>Speech Synthesis</title>
+  <link href='https://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="https://fav.farm/✅" />
+</head>
+<body>
+
     <div class="voiceinator">
+
       <h1>Mental Math</h1>
 
-      <div style="display: none">
+      <div style="display: none;">
         <select name="voice" id="voices">
           <option value="">Select A Voice</option>
         </select>
         <div>
           <label for="rate">Rate:</label>
-          <input
-            name="rate"
-            type="range"
-            min="0"
-            max="3"
-            value="1"
-            step="0.1"
-          />
+          <input name="rate" type="range" min="0" max="3" value="1" step="0.1">
         </div>
         <div>
           <label for="pitch">Pitch:</label>
-          <input name="pitch" type="range" min="0" max="2" step="0.1" />
+          <input name="pitch" type="range" min="0" max="2" step="0.1">
         </div>
       </div>
 
@@ -40,180 +31,14 @@
 
       <div id="countdown"></div>
 
-      <div style="text-align: center">
+      <div style="text-align: center;">
         <div id="stop">||</div>
         <div id="speak">></div>
       </div>
     </div>
 
-    <script>
-      const msg = new SpeechSynthesisUtterance();
-      let voices = [];
-      const voicesDropdown = document.querySelector('[name="voice"]');
-      const options = document.querySelectorAll(
-        '[type="range"], [name="text"]'
-      );
-      const speakButton = document.querySelector('#speak');
-      const stopButton = document.querySelector('#stop');
-      const textArea = document.querySelector('[name="text"]');
-      msg.text = textArea.value;
+    <script src="voice.js"></script>
+    <script src="math.js"></script>
 
-      let isPaused = true;
-
-      function populateVoices() {
-        voices = this.getVoices();
-        voicesDropdown.innerHTML = voices
-          .filter((voice) => voice.lang.includes('en'))
-          .map(
-            (voice) =>
-              `<option value="${voice.name}">${voice.name} (${voice.lang})</option>`
-          )
-          .join('');
-      }
-
-      function setVoice() {
-        msg.voice = voices.find((voice) => voice.name === this.value);
-        toggle();
-      }
-
-      function toggle(startOver = true) {
-        speechSynthesis.cancel();
-        if (startOver) {
-          speechSynthesis.speak(msg);
-        }
-      }
-
-      function setOption() {
-        console.log(this.name, this.value);
-        msg[this.name] = this.value;
-        toggle();
-      }
-
-      function setSpeakValue(value) {
-        if (isPaused === false) {
-          msg['text'] = value;
-          toggle();
-        }
-      }
-
-      function setSpeakValueFromTextbox() {
-        if (isPaused === false) {
-          msg['text'] = textArea.value;
-          toggle();
-        }
-      }
-
-      function setSpeakValuePaused(value) {
-        msg['text'] = value;
-        toggle();
-      }
-
-      function continueSpeaking() {
-        if (isPaused === false) {
-          toggle();
-        }
-      }
-
-      speechSynthesis.addEventListener('voiceschanged', populateVoices);
-      voicesDropdown.addEventListener('change', setVoice);
-      options.forEach((option) => option.addEventListener('change', setOption));
-
-      toggleVisibility(stopButton);
-
-      speakButton.addEventListener('click', () => {
-        isPaused = false;
-        toggleVisibility(stopButton);
-        toggleVisibility(speakButton);
-        setSpeakValueFromTextbox();
-      });
-
-      stopButton.addEventListener('click', () => {
-        isPaused = true;
-        toggleVisibility(stopButton);
-        toggleVisibility(speakButton);
-        // continueSpeaking();
-        setSpeakValuePaused('Paused');
-      });
-
-      // toggle html element visibility
-      function toggleVisibility(element) {
-        if (element.style.display === 'none') {
-          element.style.display = 'block';
-        } else {
-          element.style.display = 'none';
-        }
-      }
-
-      //MATH
-
-      textArea.value = '';
-
-      // create random multiplication problem
-      function createProblem(digit = 1) {
-        let num1 = Math.floor(Math.random() * power(10, digit)) + 1;
-        let num2 = Math.floor(Math.random() * power(10, digit)) + 1;
-        let problem = `${num1} times ${num2}`;
-
-        let answer = num1 * num2;
-
-        return {
-          problem: problem,
-          answer: answer,
-          full: `${problem} equals ${answer}`,
-        };
-      }
-
-      // take number to a custom power
-      function power(num, pow) {
-        let result = 1;
-        for (let i = 0; i < pow; i++) {
-          result *= num;
-        }
-        return result;
-      }
-
-      let state = 0;
-
-      let problem = createProblem();
-      let problemDigitAmount = 2;
-      let refreshTime = 20000;
-
-      function setupNewProblem() {
-        if (state === 0) {
-          problem = createProblem(problemDigitAmount);
-          state = 1;
-          textArea.value = problem.problem;
-          setSpeakValue(problem.problem);
-        } else {
-          state = 0;
-          textArea.value = problem.full;
-          setSpeakValue(problem.full);
-        }
-      }
-
-      setupNewProblem();
-
-      //create countdown timer
-      let countdown = refreshTime / 1000 + 1;
-      document.getElementById('countdown').innerHTML = countdown;
-
-      let countdownInterval = setInterval(function () {
-        if (isPaused === false) {
-          if (countdown > 0) {
-            countdown--;
-          } else {
-            countdown = refreshTime / 1000 + 1;
-          }
-
-          document.getElementById('countdown').innerHTML = countdown;
-        }
-      }, 1000);
-
-      setInterval(function () {
-        if (isPaused === false) {
-          setupNewProblem();
-        }
-      }, refreshTime);
-    </script>
-  </body>
+</body>
 </html>
